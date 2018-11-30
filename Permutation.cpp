@@ -3,6 +3,8 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <string>
+#include <iomanip>
 using namespace std;
 
 
@@ -38,26 +40,30 @@ public:
       */
     Permutation(vector<int> integerMap) {
         if(!isIntegerMap(integerMap)) {
-            cerr << "Error: invalid vector passed to Permutation " +
+            cerr << "Error: invalid vector passed to Permutation " <<
                 "constructor" << endl;
             size = DEFAULT_SIZE;
             return;
         }
-        for(int i = 0; i < integerMap.size(); ++i) {
-            perm.emplace(i, integerMap.at(i);
-            size = (i == integerMap.at(i) ? size : i);
-        }
+        for(int i = 0; i < integerMap.size(); ++i)
+            perm.emplace(i, integerMap.at(i));
+            size = integerMap.size();
     }
+    /** The above constructor, but takes in arrays of ints instead of vectors of
+      *   ints
+      */
+    Permutation(int * integerMap, int sz) 
+        : Permutation(vector<int>(integerMap, integerMap + sz)){}
     /** Constructor taking in vectors of vectors of ints representing
       *   cycles for a permutation
       * Example: {{1,3,2}{4}{5,6}} gives the integerMap
       *   1->3 2->1 3->2 4->4 5->6 6->5
       */
     Permutation(vector<vector<int>> cycles) {
+        size = DEFAULT_SIZE;
         if(!areDisjointCycles(cycles)) {
-            cerr << "Error: invalid cycles passed to Permutation " +
+            cerr << "Error: invalid cycles passed to Permutation " <<
                 "constructor" << endl;
-            size = DEFAULT_SIZE;
             return;
         }
         for(int i = 0; i < cycles.size(); ++i) {
@@ -70,9 +76,10 @@ public:
             }
         }
     }
+    
     /** Overloads operator[] to return the number mapped to by i
       */
-    int &operator[](int i) {
+    int operator[](int i) const {
         return (perm.count(i) == 1 ? perm.at(i) : i);
     }
     /** Overloaded operator * to return a Permutation which is
@@ -81,14 +88,42 @@ public:
       *  rhs = 1->2 2->3 3->1
       * this * rhs = 1->3 2->4 3->1 4->2
       */
-    Permutation operator*(const Permutation& rhs) const {
+    Permutation operator*(const Permutation& rhs) {
         int newSize = max(size, rhs.size);
         vector<int> composition;
-        for(int i = 0; i < newSize; ++i)
-            composition.push_back(this[rhs[i]]);
+        for(int i = 0; i < newSize; ++i) {
+            int temp = rhs[i];
+            temp = (*this)[temp];
+            
+            composition.push_back(temp);
+        }
     }
     int getSize() const {
         return size;
+    }
+    
+    void printOneLineNotation(ostream& os) {
+        if(size == 0) {
+            os << "()";
+            return;
+        }
+        os << "(" << (*this)[0];
+        for(int i = 1; i < size; ++i) 
+            os << setw(maximumNumberOfSpaces()) << (*this)[i];
+        os << ")";
+    }
+    void printTwoLineNotation(ostream &os) {
+        if(size == 0) {
+            os << "[]\n[]\n";
+            return;
+        }
+        os << "[";
+        for(int i = 0; i < size; ++i) 
+            os << setw(maximumNumberOfSpaces()) << i;
+        os << "]\n[";
+        for(int i = 0; i < size; ++i) 
+            os << setw(maximumNumberOfSpaces()) << (*this)[i];
+        os << "]" << endl;
     }
 private:
 
@@ -120,5 +155,14 @@ private:
             }
         }
         return true;
+    }
+    /* Returns the maximum number of spaces a integer less than size will take
+     * up when printed out in base 10 plus 1
+     */
+    int maximumNumberOfSpaces() {
+        int maxNumberOfSpaces = 1;
+        while(size >= pow(10, maxNumberOfSpaces))
+            ++maxNumberOfSpaces;
+        return ++maxNumberOfSpaces;
     }
 };
