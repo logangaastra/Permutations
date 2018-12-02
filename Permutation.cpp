@@ -157,6 +157,28 @@ public:
         for(int i = 0; i < size; ++i)
             inverseMap[(*this)[i]] = i;
     }
+    /* Returns true iff Permutation is a derangement, e.g. there are no 1 cycles
+     * Example: (2, 3, 1) is a derangement, (3, 2, 1) is not
+     */
+    public bool isDerangement() const {
+        for(int i = 0; i < size; ++i) {
+            if((*this)[i] == i)
+                return false;
+        }
+        return true;
+    }
+    int getNumberOfCycles() {
+        return getCycles.size();
+    }
+    /* returns number of n-cycles in Permutation
+     */
+    int getNumberOfCycles(int n) {
+        vector<vector<int>> cycles = getCycles();
+        int count = 0;
+        for(int i = 0; i < cycles.size(); ++i)
+            count += (cycles.size() == n ? 1 : 0);
+        return count;
+    }
     //PRINT FUNCTIONS===========================================================
     /* Prints the Permutation in one line notation
      * Does not include newLine at the end
