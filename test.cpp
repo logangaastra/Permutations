@@ -1,50 +1,34 @@
 int main()
 {
-    cout << "Test 1 ----" << endl;
-    cout << "Begin testing constructors" << endl;
-    Permutation perm1 = Permutation();
-    
-    Permutation perm2 = Permutation({3,2,1,0});
-    vector<vector<int>> cycles;
-    vector<int> cycle1, cycle2, cycle3;
-    cycle1.push_back(1);
-    cycle1.push_back(2);
-    cycle1.push_back(7);
-    cycle2.push_back(5);
-    cycle3.push_back(19);
-    cycle3.push_back(4);
-    cycles.push_back(cycle1);
-    cycles.push_back(cycle2);
-    cycles.push_back(cycle3);
-    Permutation perm3 = Permutation(cycles);
-    
-    cout << "Size: " << perm2.getSize() << endl; 
-    cout << "Target: " << "(3, 2, 1, 0)" <<endl;
-    perm2.printOneLine(cout);
-    cout << endl;
-    perm2.printTwoLine(cout);
-    perm2.printCycles(cout, true);
-    cout << endl;
-    perm2.printCycles(cout, false);
-    cout << endl;
-    cout << "perm3\nsize: " << perm3.getSize() << endl; 
-    perm3.printOneLine(cout);
-    cout << endl;
-    perm3.printTwoLine(cout);
-    perm3.printCycles(cout, true);
-    cout << endl;
-    perm3.printCycles(cout, false);
-    cout << endl;
-    cout << "Test 1 complete" << endl;
-    cout << "Test 2 ----" << endl;
-    Permutation perm4 = Permutation({1,2,0});
-    Permutation perm5 = perm4 * perm4;
-    perm4.printOneLine(cout); 
-    cout << " * ";
-    perm4.printOneLine(cout);
-    cout << " = ";
-    perm5.printOneLine(cout);
-    cout << endl;
-    cout << "Test 2 complete";
+    cout << "Begin testing Permutation.cpp" << endl;
+    cout << "Testing default constructor" << endl;
+    Permutation p1 = Permutation();
+    if(p1.getSize() != p1.DEFAULT_SIZE) {
+        cout << "Error: default constructor should set size to DEFAULT_SIZE"
+          << endl;
+        return 1;
+    }
+    cout << "Printing One Line" << endl;
+    cout << p1 << endl;
+    cout << "Printing Two Line" << endl;
+    p1.printTwoLine(cout);
+    cout << "Note: Both will depend on DEFAULT_SIZE variable in Permutation" 
+      << endl;
+    cout << "Default constructor testing complete!" << endl;
+    cout << "Testing vector constructor" << endl;
+    Permutation p2 = Permutation({1,2,4,0,3});
+    if(p2.getSize() != 5) {
+        cout << "Error: vector constructor returns wrong size" << endl;
+        return 1;
+    }
+    cout << "Printing One Line" << endl;
+    cout << p2 << endl;
+    cout << "Target: (1, 2, 4, 0, 3)" << endl;
+    cout << "Printing Two Line" << endl;
+    p2.printTwoLine(cout);
+    cout << "Target:" << endl;
+    cout << "[ 0 1 2 3 4]\n[ 1 2 4 0 3]" << endl;
+    cout << "Vector constructor testing complete!" << endl;
+    cout << "All testing complete!" << endl;
     return 0;
 }
