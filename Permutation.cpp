@@ -21,12 +21,12 @@ using namespace std;
 */
 class Permutation {
     //PRIVATE MEMBER VARIABLES==================================================
-    const int DEFAULT_SIZE = 0;
-    const int MINIMUM_ELEMENT = 0;
     unordered_map<int, int> perm;
     int size;
     
 public:
+    const int DEFAULT_SIZE = 0;
+    const int MINIMUM_ELEMENT = 0;
     //CONSTRUCTORS==============================================================
     /** Default Constructor constructs identity permutation
       */
@@ -106,8 +106,9 @@ public:
     }
     /* Overloaded operator<< to return output as specified in printOneLine
      */
-    ostream& operator<<(ostream& os) {
-        printOneLine(os);
+    friend ostream& operator<<(ostream& os, const Permutation& rhs) {
+        rhs.printOneLine(os);
+        return os;
     }
     //GETTERS===================================================================
     int getSize() const {
@@ -160,7 +161,7 @@ public:
     /* Returns true iff Permutation is a derangement, e.g. there are no 1 cycles
      * Example: (2, 3, 1) is a derangement, (3, 2, 1) is not
      */
-    public bool isDerangement() const {
+    bool isDerangement() const {
         for(int i = 0; i < size; ++i) {
             if((*this)[i] == i)
                 return false;
@@ -168,12 +169,12 @@ public:
         return true;
     }
     int getNumberOfCycles() {
-        return getCycles.size();
+        return getCycles(true).size();
     }
     /* returns number of n-cycles in Permutation
      */
     int getNumberOfCycles(int n) {
-        vector<vector<int>> cycles = getCycles();
+        vector<vector<int>> cycles = getCycles(true);
         int count = 0;
         for(int i = 0; i < cycles.size(); ++i)
             count += (cycles.size() == n ? 1 : 0);
@@ -183,7 +184,7 @@ public:
     /* Prints the Permutation in one line notation
      * Does not include newLine at the end
      */
-    void printOneLine(ostream& os) {
+    void printOneLine(ostream& os) const {
         if(size == 0) {
             os << "()";
             return;
